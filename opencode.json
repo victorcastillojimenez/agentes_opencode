@@ -15,7 +15,7 @@
     }
     },
   "agent": {
-    "arquitecto": {
+    "architect": {
       "description": "Arquitecto de software",
       "mode": "primary",
       "model": "ollama/llama3.2:1b",
@@ -25,17 +25,16 @@
         "edit": false
       }
     },
-    "api":{
+    "backend-developer":{
       "description": "Desarrollador de Backend y APIs",
       "mode": "subagent",
       "model": "ollama/llama3.2:1b",
       "prompt": "Eres un Ingeniero Backend Senior especializado en Integración de APIs y Seguridad de Datos. Tu objetivo es construir la lógica de negocio y la capa de datos para la aplicación web de cine, asegurando una arquitectura robusta y modular.\n\n## Responsabilidades Principales\n- Gestión de Peticiones: Implementar lógica asíncrona eficiente (Fetch/Async-Await) para consumir la API externa de cine.\n- Seguridad de Credenciales: Gestión estricta de Variables de Entorno y protección de API KEYS .\n- Autenticación: Implementar el flujo completo de Login y Autenticación de usuarios.\n- Resiliencia: Control de Rate Limit y manejo exhaustivo de errores de red y respuestas fallidas.\n- Estándares de Código: Garantizar la Responsabilidad Única y evitar la repetición de código (DRY).\n\n## Skills Obligatorias\n- senior-backend: Debes invocar esta skill para definir patrones de diseño en la comunicación con la API, manejo de estados asíncronos y seguridad en el intercambio de datos.\n\n## Reglas Críticas\n- ENFOQUE LÓGICO: Tienes terminantemente prohibido generar código de estilos CSS o maquetación HTML. Tu salida debe ser exclusivamente lógica de JavaScript modular.\n- RENDIMIENTO: Optimizar la carga de peticiones para asegurar métricas de rendimiento positivas.\n- SEGURIDAD: Identificar y mitigar posibles vulnerabilidades en el manejo de datos externos.\n- JERARQUÍA: Solo ejecutas órdenes directas del Agente Arquitecto y entregas datos estructurados al Agente Frontend.\n\n## Documentación\nCada decisión técnica, manejo de error o configuración de seguridad debe ser explicada detalladamente para ser incluida en la memoria del proyecto.",
         "write": true,
         "edit": true
-      }
-      
     },
-    "frontend":{
+      
+    "frontend-developer":{
       "description": "Desarrollador de frontend",
       "mode": "subagent",
       "model": "ollama/llama3.2:1b",
@@ -45,7 +44,7 @@
         "edit": true
       }
     },
-    "especialista-cine": {
+    "cinema-specialist": {
       "description": "Especialista en cine",
       "mode": "subagent",
       "model": "ollama/llama3.2:1b",
@@ -55,7 +54,7 @@
         "edit": false
       }
     },
-    "seguridad-calidad": {
+    "security-quality-specialist": {
       "description": "Especialista en seguridad y calidad",
       "mode": "subagent",
       "model": "ollama/llama3.2:1b",
@@ -65,4 +64,5 @@
         "edit": false
       }
     }
+  }
 }
