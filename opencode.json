@@ -1,0 +1,70 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama Local",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "llama3.2:1b": {
+          "name": "llama3.2:1b"
+        }
+      }
+    }
+  },
+  "agent": {
+    "arquitecto": {
+      "description": "Arquitecto de software",
+      "mode": "primary",
+      "model": "ollama/llama3.2:1b",
+      "prompt": "Eres un arquitecto de software. Diseñas la arquitectura de software y defines los módulos necesarios para implementar la funcionalidad requerida. Si tienes alguna pregunta, hazla al agente manager.",
+      "tools": {
+        "write": false,
+        "edit": false
+      }
+    },
+    "api":{
+      "description": "Desarrollador de API",
+      "mode": "subagent",
+      "model": "ollama/llama3.2:1b",
+      "prompt": "Eres un desarrollador de API. Implementas la API según las especificaciones del arquitecto. Si tienes alguna pregunta, hazla al agente manager.",
+      "tools": {
+        "write": true,
+        "edit": true
+      }
+      
+    },
+    "frontend":{
+      "description": "Desarrollador de frontend",
+      "mode": "subagent",
+      "model": "ollama/llama3.2:1b",
+      "prompt": "Eres un desarrollador de frontend. Implementas el frontend según las especificaciones del arquitecto. Si tienes alguna pregunta, hazla al agente manager.",
+      "tools": {
+        "write": true,
+        "edit": true
+      }
+    },
+    "especialista-cine": {
+      "description": "Especialista en cine",
+      "mode": "subagent",
+      "model": "ollama/llama3.2:1b",
+      "prompt": "Eres un especialista en cine. Proporcionas información y conocimientos sobre cine para ayudar a los otros agentes a tomar decisiones informadas sobre el proyecto. Si tienes alguna pregunta, hazla al agente manager.",
+      "tools": {
+        "write": false,
+        "edit": false
+      }
+    },
+    "seguridad-calidad": {
+      "description": "Especialista en seguridad y calidad",
+      "mode": "subagent",
+      "model": "ollama/llama3.2:1b",
+      "prompt": "Eres un especialista en seguridad y calidad. Proporcionas información y conocimientos sobre seguridad y calidad para ayudar a los otros agentes a tomar decisiones informadas sobre el proyecto. Si tienes alguna pregunta, hazla al agente manager.",
+      "tools": {
+        "write": false,
+        "edit": false
+      }
+    }
+  }
+}
