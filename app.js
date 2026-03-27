@@ -14,6 +14,7 @@ const App = {
         this.initElements();
         this.setupEventListeners();
         this.setupPopularSearches();
+        this.updateListBadge();
         
         console.log('🎬 Cinematic Search initialized');
     },
@@ -151,8 +152,11 @@ const App = {
         }
         
         if (this.elements.homeHeader) {
-            this.elements.homeHeader.style.display = 'flex';
-            this.elements.homeHeader.querySelector('#home-count').textContent = 'Buscando...';
+            this.elements.homeHeader.classList.add('visible');
+            const countEl = this.elements.homeHeader.querySelector('#home-count');
+            if (countEl) {
+                countEl.textContent = 'Buscando...';
+            }
         }
     },
     
@@ -172,7 +176,7 @@ const App = {
         
         // Update count
         if (this.elements.homeHeader) {
-            this.elements.homeHeader.style.display = 'flex';
+            this.elements.homeHeader.classList.add('visible');
             const count = this.elements.homeHeader.querySelector('#home-count');
             if (count) {
                 count.textContent = `${movies.length} resultado${movies.length !== 1 ? 's' : ''}`;
@@ -370,12 +374,14 @@ const App = {
             btn.classList.remove('added');
             btn.querySelector('svg').setAttribute('fill', 'none');
             this.showToast('Eliminado de Mi Lista', 'success');
+            this.updateListBadge();
         } else {
             const movieId = movie.id || movie.title;
             Storage.addToList({...movie, id: movieId});
             btn.classList.add('added');
             btn.querySelector('svg').setAttribute('fill', 'currentColor');
             this.showToast('Añadido a Mi Lista', 'success');
+            this.updateListBadge();
         }
     },
     
@@ -406,9 +412,28 @@ const App = {
             if (countEl) {
                 countEl.textContent = `${remainingCards.length} ${remainingCards.length === 1 ? 'título' : 'títulos'}`;
             }
+            
+            // Update badge
+            this.updateListBadge();
         }, 300);
         
         this.showToast('Eliminado de Mi Lista', 'success');
+    },
+    
+    /**
+     * Update the list badge count in navigation
+     */
+    updateListBadge() {
+        const count = Storage.getListCount();
+        const badge = document.getElementById('my-list-count');
+        if (badge) {
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
     },
     
     /**

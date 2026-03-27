@@ -12,12 +12,26 @@ const Navigation = {
     init() {
         this.setupNavLinks();
         this.setupMobileMenu();
+        this.setupLogoLink();
         
         // Load initial section based on URL hash
         this.handleHashChange();
         
         // Listen for hash changes
         window.addEventListener('hashchange', () => this.handleHashChange());
+    },
+    
+    /**
+     * Setup logo link
+     */
+    setupLogoLink() {
+        const logoLink = document.querySelector('.nav-logo');
+        if (logoLink) {
+            logoLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.navigateTo('home');
+            });
+        }
     },
     
     /**
@@ -69,7 +83,7 @@ const Navigation = {
     async handleHashChange() {
         const hash = window.location.hash.slice(1) || 'home';
         
-        // Map hash to section
+        // Map hash to section (hash value -> internal section name)
         const sectionMap = {
             'home': 'home',
             'peliculas': 'movies',
@@ -78,17 +92,26 @@ const Navigation = {
             'my-list': 'mylist'
         };
         
-        const section = sectionMap[hash] || 'home';
+        // Map internal section name to section ID in HTML
+        const sectionIdMap = {
+            'home': 'home',
+            'movies': 'movies',
+            'series': 'series',
+            'mylist': 'mylist'
+        };
         
-        await this.showSection(section);
+        const section = sectionMap[hash] || 'home';
+        const sectionId = sectionIdMap[section] || section;
+        
+        await this.showSection(sectionId);
     },
     
     /**
      * Show a specific section
      */
-    async showSection(section) {
-        // Update active nav link
-        this.updateActiveNavLink(section);
+    async showSection(sectionId) {
+        // Update active nav link based on sectionId
+        this.updateActiveNavLink(sectionId);
         
         // Hide all sections
         const sections = document.querySelectorAll('.content-section');
@@ -98,7 +121,7 @@ const Navigation = {
         });
         
         // Show target section with animation
-        const targetSection = document.getElementById(`${section}-section`);
+        const targetSection = document.getElementById(`${sectionId}-section`);
         if (targetSection) {
             targetSection.style.display = 'block';
             
@@ -107,10 +130,10 @@ const Navigation = {
             targetSection.classList.add('active');
             
             // Load section data if needed
-            await this.loadSectionData(section);
+            await this.loadSectionData(sectionId);
         }
         
-        this.currentSection = section;
+        this.currentSection = sectionId;
         
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -119,12 +142,13 @@ const Navigation = {
     /**
      * Update active navigation link
      */
-    updateActiveNavLink(section) {
+    updateActiveNavLink(sectionId) {
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             const linkSection = link.dataset.section;
-            if (linkSection === section || 
-                (section === 'mylist' && linkSection === 'mi-lista')) {
+            // Match both direct section IDs and their hash equivalents
+            if (linkSection === sectionId || 
+                (sectionId === 'mylist' && (linkSection === 'mi-lista' || linkSection === 'mylist'))) {
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
@@ -135,8 +159,8 @@ const Navigation = {
     /**
      * Load data for specific section
      */
-    async loadSectionData(section) {
-        switch (section) {
+    async loadSectionData(sectionId) {
+        switch (sectionId) {
             case 'movies':
                 await this.loadMoviesSection();
                 break;
@@ -167,14 +191,14 @@ const Navigation = {
         if (container.children.length > 0) return;
         
         loading.style.display = 'flex';
-        header.style.display = 'flex';
+        header.classList.add('visible');
         
         try {
             const movies = await API.getPopularMovies();
             App.displayMovies(movies, container);
         } catch (error) {
             container.innerHTML = `
-                <div class="error-message">
+                <div class="error-content" style="grid-column: 1/-1;">
                     <p>Error al cargar películas</p>
                 </div>
             `;
@@ -197,14 +221,14 @@ const Navigation = {
         if (container.children.length > 0) return;
         
         loading.style.display = 'flex';
-        header.style.display = 'flex';
+        header.classList.add('visible');
         
         try {
             const series = await API.getSeries();
             App.displayMovies(series, container);
         } catch (error) {
             container.innerHTML = `
-                <div class="error-message">
+                <div class="error-content" style="grid-column: 1/-1;">
                     <p>Error al cargar series</p>
                 </div>
             `;
@@ -225,7 +249,7 @@ const Navigation = {
         if (!container) return;
         
         loading.style.display = 'flex';
-        header.style.display = 'flex';
+        header.classList.add('visible');
         emptyState.style.display = 'none';
         
         try {
